@@ -1,0 +1,5 @@
+## Interface: 11200
+## Title: !EB
+## Notes: Enemy buffs
+## Author: shirsig
+!EB.lua
