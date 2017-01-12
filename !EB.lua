@@ -157,8 +157,8 @@ end
 
 local function updateBuffs(unit)
 	if UnitName'target' == unit then
-		ClearTarget()
-		TargetLastTarget()
+		-- ClearTarget()
+		-- TargetLastTarget()
 	end
 end
 
