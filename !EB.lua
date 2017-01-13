@@ -128,14 +128,42 @@ do
 		handlers[event](this)
 	end)
 	for _, event in {
+		'PLAYER_LOGIN',
 		'CHAT_MSG_COMBAT_HONOR_GAIN', 'CHAT_MSG_COMBAT_HOSTILE_DEATH',
 		'CHAT_MSG_SPELL_AURA_GONE_OTHER', 'CHAT_MSG_SPELL_BREAK_AURA',
 		'CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_BUFFS',
 	} do f:RegisterEvent(event) end
 end
 
-TargetFrame_OnShow = function() end
-TargetFrame_OnHide = CloseDropDownMenus
+local SPOOFED_UNIT_AURA
+
+do
+	local UNIT_AURA = {}
+	function SPOOFED_UNIT_AURA()
+		for handler in UNIT_AURA do
+			event, arg1 = 'UNIT_AURA', 'target'
+			handler()
+		end
+	end
+	function handlers.PLAYER_LOGIN()
+		local f
+		while true do
+			f = EnumerateFrames(f)
+			if not f then
+				break
+			end
+			local orig = f.GetScript and f:GetScript'OnEvent'
+			if orig then
+				f:SetScript('OnEvent', function()
+					if event == 'UNIT_AURA' then
+						UNIT_AURA[orig] = true
+					end
+					return orig()
+				end)
+			end
+		end
+	end
+end
 
 do
 	local orig = UnitBuff
@@ -157,8 +185,7 @@ end
 
 local function updateBuffs(unit)
 	if UnitName'target' == unit then
-		-- ClearTarget()
-		-- TargetLastTarget()
+		SPOOFED_UNIT_AURA()
 	end
 end
 
