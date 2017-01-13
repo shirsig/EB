@@ -128,7 +128,6 @@ do
 end
 
 local SPOOFED_UNIT_AURA
-
 do
 	local UNIT_AURA = {}
 	function SPOOFED_UNIT_AURA()
