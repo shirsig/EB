@@ -166,7 +166,7 @@ do
 					local orig = f.RegisterEvent
 					function f:RegisterEvent(event)
 						if event == 'UNIT_AURA' then
-							UNIT_AURA[handler] = true
+							UNIT_AURA[handler] = self
 						end
 						return orig(self, event)
 					end
