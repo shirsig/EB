@@ -15,10 +15,6 @@ local BUFFS = {
 		ICON = 'Ability_GhoulFrenzy',
 		DURATION = 15,
 	},
-	["Power Word: Shield"] = {
-		ICON = 'Spell_Holy_PowerWordShield',
-		DURATION = 30,
-	},
 	["Power Infusion"] = {
 		ICON = 'Spell_Holy_PowerInfusion',
 		DURATION = 15,
@@ -30,10 +26,6 @@ local BUFFS = {
 	["Ice Block"] = {
 		ICON = 'Spell_Frost_Frost',
 		DURATION = 10,
-	},
-	["Ice Barrier"] = {
-		ICON = 'Spell_Ice_Lament',
-		DURATION = 60,
 	},
 	["Nature's Grasp"] = {
 		ICON = 'Spell_Nature_NaturesWrath',
