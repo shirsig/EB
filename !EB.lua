@@ -140,11 +140,11 @@ local SPOOFED_UNIT_AURA
 do
 	local UNIT_AURA = {}
 	function SPOOFED_UNIT_AURA()
-		for handler in UNIT_AURA do
-			local saved_event, saved_arg1 = event, arg1
-			event, arg1 = 'UNIT_AURA', 'target'
+		for handler, frame in UNIT_AURA do
+			local saved_this, saved_event, saved_arg1 = this, event, arg1
+			this, event, arg1 = frame, 'UNIT_AURA', 'target'
 			handler()
-			event, arg1 = saved_event, saved_arg1
+			this, event, arg1 = saved_this, saved_event, saved_arg1
 		end
 	end
 	function handlers.PLAYER_LOGIN()
@@ -158,7 +158,7 @@ do
 			if handler then
 				f:SetScript('OnEvent', function()
 					if event == 'UNIT_AURA' then
-						UNIT_AURA[handler] = true
+						UNIT_AURA[handler] = this
 					end
 					return handler()
 				end)
