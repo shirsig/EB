@@ -141,8 +141,10 @@ do
 	local UNIT_AURA = {}
 	function SPOOFED_UNIT_AURA()
 		for handler in UNIT_AURA do
+			local saved_event, saved_arg1 = event, arg1
 			event, arg1 = 'UNIT_AURA', 'target'
 			handler()
+			event, arg1 = saved_event, saved_arg1
 		end
 	end
 	function handlers.PLAYER_LOGIN()
@@ -152,14 +154,32 @@ do
 			if not f then
 				break
 			end
-			local orig = f.GetScript and f:GetScript'OnEvent'
-			if orig then
+			local handler = f.GetScript and f:GetScript'OnEvent'
+			if handler then
 				f:SetScript('OnEvent', function()
 					if event == 'UNIT_AURA' then
-						UNIT_AURA[orig] = true
+						UNIT_AURA[handler] = true
 					end
-					return orig()
+					return handler()
 				end)
+				do
+					local orig = f.RegisterEvent
+					function f:RegisterEvent(event)
+						if event == 'UNIT_AURA' then
+							UNIT_AURA[handler] = true
+						end
+						return orig(self, event)
+					end
+				end
+				do
+					local orig = f.UnregisterEvent
+					function f:UnregisterEvent(event)
+						if event == 'UNIT_AURA' then
+							UNIT_AURA[handler] = nil
+						end
+						return orig(self, event)
+					end
+				end
 			end
 		end
 	end
