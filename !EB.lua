@@ -129,9 +129,9 @@ end
 
 local SPOOFED_UNIT_AURA
 do
-	local UNIT_AURA = {}
+	local frames = {}
 	function SPOOFED_UNIT_AURA()
-		for handler, frame in UNIT_AURA do
+		for frame, handler in frames do
 			local saved_this, saved_event, saved_arg1 = this, event, arg1
 			this, event, arg1 = frame, 'UNIT_AURA', 'target'
 			handler()
@@ -149,7 +149,7 @@ do
 			if handler then
 				f:SetScript('OnEvent', function()
 					if event == 'UNIT_AURA' then
-						UNIT_AURA[handler] = this
+						frames[this] = handler
 					end
 					return handler()
 				end)
@@ -157,7 +157,7 @@ do
 					local orig = f.RegisterEvent
 					function f:RegisterEvent(event)
 						if event == 'UNIT_AURA' then
-							UNIT_AURA[handler] = self
+							frames[self] = handler
 						end
 						return orig(self, event)
 					end
@@ -166,7 +166,7 @@ do
 					local orig = f.UnregisterEvent
 					function f:UnregisterEvent(event)
 						if event == 'UNIT_AURA' then
-							UNIT_AURA[handler] = nil
+							frames[self] = nil
 						end
 						return orig(self, event)
 					end
